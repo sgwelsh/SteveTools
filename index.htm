@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Form Data</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            padding: 2.5rem;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #1c1e21;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4b4f56;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+        
+        /* Styles for the custom autocomplete suggestions */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+        .suggestions-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: white;
+            border: 1px solid #dddfe2;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+        }
+        .suggestions-list.show {
+            display: block;
+        }
+        .suggestion-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f2f5;
+        }
+        .suggestion-item .delete-btn {
+            color: #888;
+            font-weight: bold;
+            padding: 0 5px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .suggestion-item .delete-btn:hover {
+            background-color: #ddd;
+        }
+
+        .address-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .address-group .form-group {
+            margin-bottom: 0;
+        }
+        .address-group .form-group label {
+            margin-bottom: 0.25rem;
+            font-size: 0.9em;
+        }
+        
+        .address-group .form-group:nth-of-type(1),
+        .address-group .form-group:nth-of-type(2) {
+            flex-basis: 100px;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .address-group .form-group:last-of-type {
+            flex-grow: 1;
+        }
+
+        /* Button Styles */
+        #copyButton {
+            width: 100%;
+            padding: 12px;
+            margin-top: 1rem;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        #copyButton:hover {
+            background-color: #166fe5;
+        }
+        
+        #status {
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 500;
+            height: 20px;
+            transition: color 0.3s, opacity 0.3s;
+        }
+        #status.success {
+            color: #28a745;
+        }
+        #status.error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Copy Form Data</h2>
+        
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="e.g., John Doe">
+        </div>
+        
+        <div class="address-group">
+            <div class="form-group">
+                <label for="addressNum">Address #</label>
+                <input type="text" id="addressNum" placeholder="123">
+            </div>
+            
+            <div class="form-group">
+                <label for="suiteNum">Suite #</label>
+                <input type="text" id="suiteNum" placeholder="4B">
+            </div>
+
+            <div class="form-group autocomplete-wrapper">
+                <label for="streetName">Street Name</label>
+                <input type="text" id="streetName" placeholder="e.g., Main St.">
+                <ul class="suggestions-list" id="suggestionsList"></ul>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date">
+        </div>
+
+        <div class="form-group">
+            <label for="note">Note</label>
+            <input type="text" id="note" placeholder="e.g., Optional note">
+        </div>
+        
+        <!-- The button is back, as it's required for the clipboard to work on a webhost -->
+        <button id="copyButton">Copy Entries to Clipboard</button>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Element References ---
+            const nameInput = document.getElementById('name');
+            const addressNumInput = document.getElementById('addressNum');
+            const suiteNumInput = document.getElementById('suiteNum');
+            const streetNameInput = document.getElementById('streetName');
+            const dateInput = document.getElementById('date');
+            const noteInput = document.getElementById('note');
+            const copyButton = document.getElementById('copyButton');
+            const statusMessage = document.getElementById('status');
+            const suggestionsList = document.getElementById('suggestionsList');
+
+            const STORAGE_KEY = 'streetNameSuggestions';
+
+            // --- Autocomplete Functions (Unchanged) ---
+            const getSuggestions = () => {
+                const suggestions = localStorage.getItem(STORAGE_KEY);
+                if (suggestions) {
+                    return JSON.parse(suggestions);
+                } else {
+                    return ["Main Street", "Oak Avenue", "Pine Lane", "Maple Drive", "Cedar Boulevard", "Elm Street", "Park Avenue", "Washington Street", "First Avenue", "Second Street"];
+                }
+            };
+
+            const saveSuggestion = (street) => {
+                if (!street) return;
+                let suggestions = getSuggestions();
+                if (!suggestions.includes(street)) {
+                    suggestions.unshift(street);
+                    if (suggestions.length > 20) {
+                        suggestions = suggestions.slice(0, 20);
+                    }
+                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(suggestions));
+            };
+
+            const deleteSuggestion = (streetToDelete) => {
+                let suggestions = getSuggestions();
+                suggestions = suggestions.filter(street => street !== streetToDelete);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(suggestions));
+            };
+
+            const renderSuggestions = (filter = '') => {
+                const suggestions = getSuggestions();
+                const filtered = suggestions.filter(street => street.toLowerCase().includes(filter.toLowerCase()));
+                suggestionsList.innerHTML = '';
+                if (filtered.length > 0) {
+                    suggestionsList.classList.add('show');
+                    filtered.forEach(street => {
+                        const li = document.createElement('li');
+                        li.className = 'suggestion-item';
+                        const span = document.createElement('span');
+                        span.textContent = street;
+                        const deleteBtn = document.createElement('span');
+                        deleteBtn.className = 'delete-btn';
+                        deleteBtn.textContent = '×';
+                        deleteBtn.onclick = (e) => { e.stopPropagation(); deleteSuggestion(street); renderSuggestions(streetNameInput.value); };
+                        li.appendChild(span);
+                        li.appendChild(deleteBtn);
+                        li.onclick = () => { streetNameInput.value = street; suggestionsList.classList.remove('show'); };
+                        suggestionsList.appendChild(li);
+                    });
+                } else {
+                    suggestionsList.classList.remove('show');
+                }
+            };
+            
+            // --- Event Listeners for Autocomplete (Unchanged) ---
+            streetNameInput.addEventListener('input', (e) => renderSuggestions(e.target.value));
+            streetNameInput.addEventListener('focus', () => renderSuggestions(streetNameInput.value));
+            document.addEventListener('click', (e) => { if (!e.target.closest('.autocomplete-wrapper')) { suggestionsList.classList.remove('show'); } });
+            streetNameInput.addEventListener('blur', () => saveSuggestion(streetNameInput.value.trim()));
+            
+            // --- Clipboard Logic (Moved to button click) ---
+            copyButton.addEventListener('click', async () => {
+                const name = nameInput.value.trim();
+                const addressNum = addressNumInput.value.trim();
+                const suiteNum = suiteNumInput.value.trim();
+                const streetName = streetNameInput.value.trim();
+                const date = dateInput.value;
+                const note = noteInput.value.trim();
+                
+                const dataEntries = [name, addressNum, suiteNum, streetName, date, note];
+                const textToCopy = dataEntries.join('_');
+
+                if (!textToCopy) {
+                     statusMessage.textContent = 'Please enter some data to copy.';
+                     statusMessage.className = 'error';
+                     return;
+                }
+
+                try {
+                    // This will now work because it's triggered by a button click
+                    await navigator.clipboard.writeText(textToCopy);
+                    statusMessage.textContent = 'Data copied to clipboard!';
+                    statusMessage.className = 'success';
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    statusMessage.textContent = 'Failed to copy data.';
+                    statusMessage.className = 'error';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
