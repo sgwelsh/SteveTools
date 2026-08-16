@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Form Data</title>
+    <title>Auto-Copy Form Data</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -53,8 +53,8 @@
             border-color: #1877f2;
             box-shadow: 0 0 0 2px #e7f3ff;
         }
-
-        /* --- Styles for the custom autocomplete suggestions --- */
+        
+        /* Styles for the custom autocomplete suggestions */
         .autocomplete-wrapper {
             position: relative;
         }
@@ -73,7 +73,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            display: none;
+            display: none; /* Hidden by default */
         }
         .suggestions-list.show {
             display: block;
@@ -122,43 +122,12 @@
         .address-group .form-group:last-of-type {
             flex-grow: 1;
         }
-
-        #copyButton {
-            width: 100%;
-            padding: 12px;
-            margin-top: 1rem;
-            font-size: 16px;
-            font-weight: bold;
-            background-color: #1877f2;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-        #copyButton:hover {
-            background-color: #166fe5;
-        }
-        
-        #status {
-            text-align: center;
-            margin-top: 1rem;
-            font-weight: 500;
-            height: 20px;
-            transition: color 0.3s, opacity 0.3s;
-        }
-        #status.success {
-            color: #28a745;
-        }
-        #status.error {
-            color: #dc3545;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Copy Form Data</h2>
+        <h2>Auto-Copy Form Data</h2>
         
         <div class="form-group">
             <label for="name">Name</label>
@@ -176,10 +145,11 @@
                 <input type="text" id="suiteNum" placeholder="4B">
             </div>
 
-            <!-- Only the street name field has the autocomplete wrapper -->
+            <!-- Wrapped input in a div for the custom dropdown -->
             <div class="form-group autocomplete-wrapper">
                 <label for="streetName">Street Name</label>
                 <input type="text" id="streetName" placeholder="e.g., Main St.">
+                <!-- This list will be populated by JavaScript -->
                 <ul class="suggestions-list" id="suggestionsList"></ul>
             </div>
         </div>
@@ -193,33 +163,40 @@
             <label for="note">Note</label>
             <input type="text" id="note" placeholder="e.g., Optional note">
         </div>
-        
-        <button id="copyButton">Copy Entries to Clipboard</button>
-        <p id="status"></p>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Element References ---
             const nameInput = document.getElementById('name');
             const addressNumInput = document.getElementById('addressNum');
             const suiteNumInput = document.getElementById('suiteNum');
             const streetNameInput = document.getElementById('streetName');
             const dateInput = document.getElementById('date');
             const noteInput = document.getElementById('note');
-            const copyButton = document.getElementById('copyButton');
-            const statusMessage = document.getElementById('status');
             const suggestionsList = document.getElementById('suggestionsList');
 
             const STORAGE_KEY = 'streetNameSuggestions';
 
-            // --- Autocomplete Functions (only used by street name) ---
+            // --- Functions for Local Storage ---
             const getSuggestions = () => {
                 const suggestions = localStorage.getItem(STORAGE_KEY);
                 if (suggestions) {
                     return JSON.parse(suggestions);
                 } else {
-                    return ["Main Street", "Oak Avenue", "Pine Lane", "Maple Drive", "Cedar Boulevard", "Elm Street", "Park Avenue", "Washington Street", "First Avenue", "Second Street"];
+                    // MODIFIED: If localStorage is empty, return a starter list.
+                    // This will be saved to localStorage on the first blur event.
+                    return [
+                        "Main Street",
+                        "Oak Avenue",
+                        "Pine Lane",
+                        "Maple Drive",
+                        "Cedar Boulevard",
+                        "Elm Street",
+                        "Park Avenue",
+                        "Washington Street",
+                        "First Avenue",
+                        "Second Street"
+                    ];
                 }
             };
 
@@ -234,31 +211,47 @@
                 }
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(suggestions));
             };
-            
+
             const deleteSuggestion = (streetToDelete) => {
                 let suggestions = getSuggestions();
                 suggestions = suggestions.filter(street => street !== streetToDelete);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(suggestions));
             };
 
+            // --- Functions for UI Interaction ---
             const renderSuggestions = (filter = '') => {
                 const suggestions = getSuggestions();
                 const filtered = suggestions.filter(street => street.toLowerCase().includes(filter.toLowerCase()));
+                
                 suggestionsList.innerHTML = '';
+                
                 if (filtered.length > 0) {
                     suggestionsList.classList.add('show');
                     filtered.forEach(street => {
                         const li = document.createElement('li');
                         li.className = 'suggestion-item';
+                        
                         const span = document.createElement('span');
                         span.textContent = street;
+                        
                         const deleteBtn = document.createElement('span');
                         deleteBtn.className = 'delete-btn';
                         deleteBtn.textContent = '×';
-                        deleteBtn.onclick = (e) => { e.stopPropagation(); deleteSuggestion(street); renderSuggestions(streetNameInput.value); };
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            deleteSuggestion(street);
+                            renderSuggestions(streetNameInput.value);
+                        };
+                        
                         li.appendChild(span);
                         li.appendChild(deleteBtn);
-                        li.onclick = () => { streetNameInput.value = street; suggestionsList.classList.remove('show'); };
+                        
+                        li.onclick = () => {
+                            streetNameInput.value = street;
+                            suggestionsList.classList.remove('show');
+                            updateClipboard();
+                        };
+                        
                         suggestionsList.appendChild(li);
                     });
                 } else {
@@ -266,14 +259,27 @@
                 }
             };
             
-            // --- Event Listeners for Autocomplete (only on street name) ---
-            streetNameInput.addEventListener('input', (e) => renderSuggestions(e.target.value));
-            streetNameInput.addEventListener('focus', () => renderSuggestions(streetNameInput.value));
-            document.addEventListener('click', (e) => { if (!e.target.closest('.autocomplete-wrapper')) { suggestionsList.classList.remove('show'); } });
-            streetNameInput.addEventListener('blur', () => saveSuggestion(streetNameInput.value.trim()));
+            // --- Event Listeners ---
+            streetNameInput.addEventListener('input', (e) => {
+                renderSuggestions(e.target.value);
+                updateClipboard();
+            });
+
+            streetNameInput.addEventListener('focus', () => {
+                renderSuggestions(streetNameInput.value);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.autocomplete-wrapper')) {
+                    suggestionsList.classList.remove('show');
+                }
+            });
+
+            streetNameInput.addEventListener('blur', () => {
+                saveSuggestion(streetNameInput.value.trim());
+            });
             
-            // --- Clipboard Logic (only on button click) ---
-            copyButton.addEventListener('click', async () => {
+            const updateClipboard = async () => {
                 const name = nameInput.value.trim();
                 const addressNum = addressNumInput.value.trim();
                 const suiteNum = suiteNumInput.value.trim();
@@ -284,22 +290,19 @@
                 const dataEntries = [name, addressNum, suiteNum, streetName, date, note];
                 const textToCopy = dataEntries.join('_');
 
-                if (!textToCopy) {
-                     statusMessage.textContent = 'Please enter some data to copy.';
-                     statusMessage.className = 'error';
-                     return;
-                }
-
                 try {
                     await navigator.clipboard.writeText(textToCopy);
-                    statusMessage.textContent = 'Data copied to clipboard!';
-                    statusMessage.className = 'success';
+                    console.log('Clipboard updated!');
                 } catch (err) {
                     console.error('Failed to copy text: ', err);
-                    statusMessage.textContent = 'Failed to copy data.';
-                    statusMessage.className = 'error';
                 }
-            });
+            };
+
+            nameInput.addEventListener('input', updateClipboard);
+            addressNumInput.addEventListener('input', updateClipboard);
+            suiteNumInput.addEventListener('input', updateClipboard);
+            dateInput.addEventListener('input', updateClipboard);
+            noteInput.addEventListener('input', updateClipboard);
         });
     </script>
 
