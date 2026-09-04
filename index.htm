@@ -1,295 +1,510 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Copy Form Data</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            margin: 0;
-            padding: 2rem 0;
-            background-color: #f0f2f5;
-        }
-        .container {
-            padding: 2.5rem;
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-        }
-        h2 {
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            color: #1c1e21;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #4b4f56;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 16px;
-            border: 1px solid #dddfe2;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #1877f2;
-            box-shadow: 0 0 0 2px #e7f3ff;
-        }
-        
-        /* Styles for the custom autocomplete suggestions */
-        .autocomplete-wrapper {
-            position: relative;
-        }
-        .suggestions-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            background: white;
-            border: 1px solid #dddfe2;
-            border-top: none;
-            border-radius: 0 0 6px 6px;
-            max-height: 200px;
-            overflow-y: auto;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: none; /* Hidden by default */
-        }
-        .suggestions-list.show {
-            display: block;
-        }
-        .suggestion-item {
-            padding: 10px 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .suggestion-item:hover {
-            background-color: #f0f2f5;
-        }
-        .suggestion-item .delete-btn {
-            color: #888;
-            font-weight: bold;
-            padding: 0 5px;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        .suggestion-item .delete-btn:hover {
-            background-color: #ddd;
-        }
-
-        .address-group {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
-        .address-group .form-group {
-            margin-bottom: 0;
-        }
-        .address-group .form-group label {
-            margin-bottom: 0.25rem;
-            font-size: 0.9em;
-        }
-        
-        .address-group .form-group:nth-of-type(1),
-        .address-group .form-group:nth-of-type(2) {
-            flex-basis: 100px;
-            flex-grow: 0;
-            flex-shrink: 0;
-        }
-
-        .address-group .form-group:last-of-type {
-            flex-grow: 1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <title>MFMA Application</title>
+  
+  <link rel="icon" type="image/x-icon" href="https://www.formstack.com/images/favicon/favicon.ico" />
+  
+  <style>
+    /* Formstack-like styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #595d64;
+      background-color: #ffffff;
+    }
+    
+    .fsBody {
+      padding: 0;
+    }
+    
+    .form-container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .section {
+      margin-bottom: 25px;
+      background-color: #edeff0;
+      padding: 25px;
+      border-radius: 0;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #595d64;
+      font-weight: 400;
+    }
+    
+    .field {
+      margin-bottom: 20px;
+    }
+    
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #595d64;
+      font-weight: 400;
+    }
+    
+    .field.required label:after {
+      content: " *";
+      color: #ff3c3c;
+    }
+    
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #455560;
+      background-color: #ffffff;
+      color: #595d64;
+      font-size: 14px;
+      border-radius: 0;
+    }
+    
+    .field textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      outline: none;
+      border-color: #017cc2;
+    }
+    
+    .radio-group,
+    .checkbox-group {
+      margin-bottom: 15px;
+    }
+    
+    .radio-option,
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .radio-option input,
+    .checkbox-option input {
+      margin-right: 8px;
+    }
+    
+    .richtext {
+      margin-bottom: 20px;
+    }
+    
+    .richtext img {
+      max-width: 300px;
+      display: block;
+      margin: 0 auto 20px;
+    }
+    
+    .instructions {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-left: 4px solid #595d64;
+    }
+    
+    .signature-field {
+      position: relative;
+      border: 1px dashed #455560;
+      height: 120px;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+    }
+    
+    .signature-label {
+      position: absolute;
+      bottom: 5px;
+      left: 10px;
+      font-size: 12px;
+      color: #6e7580;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+    }
+    
+    #pad {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      z-index: 2;
+    }
+    
+    .submit-btn {
+      background-color: #1c2f3a;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 0;
+    }
+    
+    .submit-btn:hover {
+      background-color: #14252e;
+    }
+    
+    .supporting-text {
+      font-size: 12px;
+      color: #6e7580;
+      margin-top: 5px;
+    }
+    
+    .signature-controls {
+      margin-top: 5px;
+      font-size: 12px;
+    }
+    
+    .signature-controls button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    pre {
+      font-family: inherit;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
-<body>
-
-    <div class="container">
-        <h2>Auto-Copy Form Data</h2>
+<body class="fsBody body-hosted-form">
+  <div class="form-container">
+    <form action="https://formsubmit.co/stevengwelsh@gmail.com" method="POST" id="applicationForm">
+      <!-- Logo and Title -->
+      <div class="section">
+        <div class="richtext">
+          <img src="https://s3.amazonaws.com/files.formstack.com/public/133466/image_MFMAMembership_Application_2015.jpg" alt="MFMA Logo" style="width: 300px; display: block; margin: 0 auto;">
+        </div>
+        <h2 class="section-title">METROPOLITAN FIRE MARSHALS ASSOCIATION MEMBERSHIP APPLICATION</h2>
         
-        <!-- MODIFIED: Name field now also has the autocomplete wrapper -->
-        <div class="form-group autocomplete-wrapper">
-            <label for="name">Name</label>
-            <input type="text" id="name" placeholder="e.g., John Doe">
-            <ul class="suggestions-list" id="suggestionsList-name"></ul>
+        <div class="instructions">
+          <p>Instruction: After completing the application you must press the submit button at the end of the form to complete the process. You will receive an email confimation of your application. Please include a copy of your confirmation with your payment if paying by check.</p>
+        </div>
+      </div>
+      
+      <!-- Form Fields -->
+      <div class="section">
+        <div class="field required">
+          <label>Membership Type</label>
+          <div class="checkbox-group">
+            <div class="checkbox-option">
+              <input type="checkbox" name="membership_type" value="New Member Regular/Associate   $25.00" id="new_member">
+              <label for="new_member">New Member Regular/Associate   $25.00</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" name="membership_type" value="Membership Renewal Regular/Associate   $25.00" id="renewal">
+              <label for="renewal">Membership Renewal Regular/Associate   $25.00</label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" name="membership_type" value="Membership Update Retired/Honorary" id="retired">
+              <label for="retired">Membership Update Retired/Honorary</label>
+            </div>
+          </div>
         </div>
         
-        <div class="address-group">
-            <div class="form-group">
-                <label for="addressNum">Address #</label>
-                <input type="text" id="addressNum" placeholder="123">
-            </div>
-            
-            <div class="form-group">
-                <label for="suiteNum">Suite #</label>
-                <input type="text" id="suiteNum" placeholder="4B">
-            </div>
-
-            <div class="form-group autocomplete-wrapper">
-                <label for="streetName">Street Name</label>
-                <input type="text" id="streetName" placeholder="e.g., Main St.">
-                <ul class="suggestions-list" id="suggestionsList-streetName"></ul>
-            </div>
+        <div class="field">
+          <label for="agency_name">Agency or Organization Name (This will be publicly visible under Current Members)</label>
+          <input type="text" id="agency_name" name="agency_name">
         </div>
         
-        <div class="form-group">
-            <label for="date">Date</label>
-            <input type="date" id="date">
+        <div class="field required">
+          <label for="member_name">Member Name (This will be publicly visible under Current Members)</label>
+          <input type="text" id="member_name" name="member_name" required>
         </div>
-
-        <div class="form-group">
-            <label for="note">Note</label>
-            <input type="text" id="note" placeholder="e.g., Optional note">
+        
+        <div class="field">
+          <label for="title">Title (This will be publicly visible under Current Members)</label>
+          <input type="text" id="title" name="title">
         </div>
-    </div>
+        
+        <div class="field">
+          <label for="agency_address">Agency Address (This will be publicly visible under Current Members)</label>
+          <input type="text" id="agency_address" name="agency_address">
+        </div>
+        
+        <div class="field">
+          <label for="home_address">Home Address (Optional)</label>
+          <input type="text" id="home_address" name="home_address">
+        </div>
+        
+        <div class="field">
+          <label for="published_phone">Published Phone (This will be publicly visible under Current Members)</label>
+          <input type="tel" id="published_phone" name="published_phone">
+        </div>
+        
+        <div class="field">
+          <label for="office_phone">Office Phone</label>
+          <input type="tel" id="office_phone" name="office_phone">
+        </div>
+        
+        <div class="field required">
+          <label for="mobile_phone">Mobile Phone</label>
+          <input type="tel" id="mobile_phone" name="mobile_phone" required>
+        </div>
+        
+        <div class="field">
+          <label for="published_email">Published Email (This will be publicly visible under Current Members)</label>
+          <input type="email" id="published_email" name="published_email">
+        </div>
+        
+        <div class="field required">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="field required">
+          <label>ICC Member?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="icc_member" value="Yes" id="icc_yes" required>
+              <label for="icc_yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="icc_member" value="No" id="icc_no">
+              <label for="icc_no">No</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="field" id="icc_number_field" style="display:none;">
+          <label for="icc_number">ICC Member Number</label>
+          <input type="text" id="icc_number" name="icc_number">
+        </div>
+        
+        <div class="field" id="sponsor1_field" style="display:none;">
+          <label for="sponsor1_name">Sponsor 1 Name</label>
+          <input type="text" id="sponsor1_name" name="sponsor1_name">
+        </div>
+        
+        <div class="field" id="sponsor2_field" style="display:none;">
+          <label for="sponsor2_name">Sponsor 2 Name</label>
+          <input type="text" id="sponsor2_name" name="sponsor2_name">
+        </div>
+        
+        <div class="field" id="why_join_field" style="display:none;">
+          <label for="why_join">Explain why you would like to join the MFMA:</label>
+          <textarea id="why_join" name="why_join"></textarea>
+          <div class="supporting-text">Any statement on this application that is determined to be untrue or misleading is grounds for rejection of new members or termination of existing members.</div>
+        </div>
+        
+        <div class="field required">
+          <label>Signature</label>
+          <div class="signature-field">
+            <canvas id="pad"></canvas>
+            <div class="signature-label">Use your mouse or finger to draw your signature above</div>
+          </div>
+          <div class="signature-controls">
+            <button type="button" id="clearSignature">Clear Signature</button>
+          </div>
+          <input type="hidden" id="signature" name="signature" value="">
+          <input type="hidden" id="signatureStatus" name="signature_status" value="not_provided">
+        </div>
+        
+        <div class="field">
+          <label for="check_number">Check # (If paying by credit card, type Credit in this field)</label>
+          <input type="text" id="check_number" name="check_number">
+        </div>
+        
+        <div class="field">
+          <label for="comments">Comments</label>
+          <textarea id="comments" name="comments"></textarea>
+        </div>
+        
+        <div class="richtext">
+          <pre><strong>MAKE CHECKS PAYABLE TO</strong>: Metropolitan Fire Marshals Association
+Mail Check to:
+Fire Marshal Steven Welsh
+c/o Hazelwood Fire Department
+6800 Howdershell Rd. Hazelwood MO 63042
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Define fields that need autocomplete functionality ---
-            // The 'key' is for localStorage, the 'id' is the element ID, and 'starterList' is the initial data.
-            const autocompleteFields = [
-                {
-                    key: 'nameSuggestions',
-                    id: 'name',
-                    starterList: ["John Doe", "Jane Smith", "Peter Jones"]
-                },
-                {
-                    key: 'streetNameSuggestions',
-                    id: 'streetName',
-                    starterList: ["Main Street", "Oak Avenue", "Pine Lane", "Maple Drive", "Cedar Boulevard"]
-                }
-            ];
+For Credit Card Payments, there will be a 3% processing fee
 
-            // --- Generic Autocomplete Functions ---
-            const getSuggestions = (key, starterList) => {
-                const suggestions = localStorage.getItem(key);
-                return suggestions ? JSON.parse(suggestions) : starterList;
-            };
+Contact: Betty Stoecklin
+St. Louis County Fire Academy
+314-889-8670</pre>
+        </div>
+        
+        <div class="field">
+          <button type="submit" class="submit-btn">Submit Form</button>
+        </div>
+      </div>
+      
+      <!-- Formsubmit required fields -->
+      <input type="hidden" name="_subject" value="MFMA Application Submission">
+      <input type="hidden" name="_template" value="table">
+    </form>
+  </div>
 
-            const saveSuggestion = (key, value, starterList) => {
-                if (!value) return;
-                let suggestions = getSuggestions(key, starterList);
-                if (!suggestions.includes(value)) {
-                    suggestions.unshift(value);
-                    if (suggestions.length > 20) suggestions = suggestions.slice(0, 20);
-                    localStorage.setItem(key, JSON.stringify(suggestions));
-                }
-            };
-
-            const deleteSuggestion = (key, valueToDelete) => {
-                let suggestions = JSON.parse(localStorage.getItem(key) || '[]');
-                suggestions = suggestions.filter(val => val !== valueToDelete);
-                localStorage.setItem(key, JSON.stringify(suggestions));
-            };
-            
-            const renderSuggestions = (inputElement, listElement, key, starterList, filter = '') => {
-                const suggestions = getSuggestions(key, starterList);
-                const filtered = suggestions.filter(val => val.toLowerCase().includes(filter.toLowerCase()));
-                
-                listElement.innerHTML = '';
-                if (filtered.length > 0) {
-                    listElement.classList.add('show');
-                    filtered.forEach(value => {
-                        const li = document.createElement('li');
-                        li.className = 'suggestion-item';
-                        
-                        const span = document.createElement('span');
-                        span.textContent = value;
-                        
-                        const deleteBtn = document.createElement('span');
-                        deleteBtn.className = 'delete-btn';
-                        deleteBtn.textContent = '×';
-                        deleteBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            deleteSuggestion(key, value);
-                            renderSuggestions(inputElement, listElement, key, starterList, inputElement.value);
-                        };
-                        
-                        li.appendChild(span);
-                        li.appendChild(deleteBtn);
-                        
-                        li.onclick = () => {
-                            inputElement.value = value;
-                            listElement.classList.remove('show');
-                            updateClipboard();
-                        };
-                        
-                        listElement.appendChild(li);
-                    });
-                } else {
-                    listElement.classList.remove('show');
-                }
-            };
-
-            // --- Initialization for each autocomplete field ---
-            autocompleteFields.forEach(field => {
-                const inputEl = document.getElementById(field.id);
-                const listEl = document.getElementById(`suggestionsList-${field.id}`);
-
-                inputEl.addEventListener('input', (e) => renderSuggestions(inputEl, listEl, field.key, field.starterList, e.target.value));
-                inputEl.addEventListener('focus', () => renderSuggestions(inputEl, listEl, field.key, field.starterList, inputEl.value));
-                inputEl.addEventListener('blur', () => saveSuggestion(field.key, inputEl.value.trim(), field.starterList));
-            });
-
-            // Hide lists when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.autocomplete-wrapper')) {
-                    document.querySelectorAll('.suggestions-list').forEach(list => list.classList.remove('show'));
-                }
-            });
-
-            // --- Clipboard Logic (unchanged) ---
-            const updateClipboard = async () => {
-                const name = document.getElementById('name').value.trim();
-                const addressNum = document.getElementById('addressNum').value.trim();
-                const suiteNum = document.getElementById('suiteNum').value.trim();
-                const streetName = document.getElementById('streetName').value.trim();
-                const date = document.getElementById('date').value;
-                const note = document.getElementById('note').value.trim();
-                
-                const dataEntries = [name, addressNum, suiteNum, streetName, date, note];
-                const textToCopy = dataEntries.join('_');
-
-                try {
-                    await navigator.clipboard.writeText(textToCopy);
-                    console.log('Clipboard updated!');
-                } catch (err) {
-                    console.error('Failed to copy text: ', err);
-                }
-            };
-
-            // Add listeners to all inputs to update the clipboard
-            document.querySelectorAll('input').forEach(input => {
-                if (input.type !== 'date') { // Date input listener is separate if needed, but 'input' works
-                    input.addEventListener('input', updateClipboard);
-                }
-            });
-            document.getElementById('date').addEventListener('input', updateClipboard);
-
-        });
-    </script>
-
+  <script>
+    // Add conditional logic for ICC member
+    document.querySelectorAll('input[name="icc_member"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const iccNumberField = document.getElementById('icc_number_field');
+        if (this.value === 'Yes') {
+          iccNumberField.style.display = 'block';
+        } else {
+          iccNumberField.style.display = 'none';
+        }
+      });
+    });
+    
+    // Add conditional logic for new member selection
+    document.querySelectorAll('input[name="membership_type"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const showSponsors = document.getElementById('new_member').checked;
+        document.getElementById('sponsor1_field').style.display = showSponsors ? 'block' : 'none';
+        document.getElementById('sponsor2_field').style.display = showSponsors ? 'block' : 'none';
+        document.getElementById('why_join_field').style.display = showSponsors ? 'block' : 'none';
+      });
+    });
+    
+    // Signature pad functionality
+    const signatureField = document.querySelector('.signature-field');
+    const canvas = document.getElementById('pad');
+    const ctx = canvas.getContext('2d');
+    const signatureInput = document.getElementById('signature');
+    const signatureStatusInput = document.getElementById('signatureStatus');
+    
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let isEmpty = true;
+    
+    // Set canvas size to match container
+    function resizeCanvas() {
+      const rect = signatureField.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height - 20; // Account for label
+      
+      // Set drawing styles
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      lastX = e.clientX - rect.left;
+      lastY = e.clientY - rect.top;
+      
+      // Mark signature as no longer empty
+      if (isEmpty) {
+        isEmpty = false;
+        signatureStatusInput.value = 'provided';
+      }
+    }
+    
+    function draw(e) {
+      if (!isDrawing) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      
+      lastX = x;
+      lastY = y;
+    }
+    
+    function stopDrawing() {
+      if (isDrawing) {
+        isDrawing = false;
+        saveSignature();
+      }
+    }
+    
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+    
+    // Touch events for mobile
+    canvas.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('mousedown', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      canvas.dispatchEvent(mouseEvent);
+    });
+    
+    canvas.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      canvas.dispatchEvent(mouseEvent);
+    });
+    
+    canvas.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      const mouseEvent = new MouseEvent('mouseup', {});
+      canvas.dispatchEvent(mouseEvent);
+    });
+    
+    function saveSignature() {
+      // Save canvas as data URL with a reasonable size limit
+      const dataURL = canvas.toDataURL('image/png', 0.7);
+      signatureInput.value = dataURL;
+    }
+    
+    // Clear signature functionality
+    document.getElementById('clearSignature').addEventListener('click', function() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      signatureInput.value = '';
+      signatureStatusInput.value = 'not_provided';
+      isEmpty = true;
+    });
+    
+    // Form submission validation
+    document.getElementById('applicationForm').addEventListener('submit', function(e) {
+      // Check if signature is provided
+      if (isEmpty) {
+        e.preventDefault();
+        alert('Please provide your signature before submitting the form.');
+        return false;
+      }
+    });
+  </script>
 </body>
 </html>
