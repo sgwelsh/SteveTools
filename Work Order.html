@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; }
-        iframe { width: 100%; height: 100vh; border: none; }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf_viewer.min.css">
 </head>
 <body>
-    <iframe src="Blank Work Order Copy.pdf"></iframe>
+    <div id="pdf-container" style="width: 100%; height: 100vh;"></div>
+    <script>
+        pdfjsLib.getDocument('Blank Work Order Copy.pdf').promise.then(pdf => {
+            // Render the PDF
+        });
+    </script>
 </body>
 </html>
