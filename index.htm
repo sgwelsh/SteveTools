@@ -1,510 +1,263 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  
-  <title>MFMA Application</title>
-  
-  <link rel="icon" type="image/x-icon" href="https://www.formstack.com/images/favicon/favicon.ico" />
-  
-  <style>
-    /* Formstack-like styling */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: 'Lato', sans-serif;
-      font-size: 14px;
-      line-height: 1.4;
-      color: #595d64;
-      background-color: #ffffff;
-    }
-    
-    .fsBody {
-      padding: 0;
-    }
-    
-    .form-container {
-      max-width: 650px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    .section {
-      margin-bottom: 25px;
-      background-color: #edeff0;
-      padding: 25px;
-      border-radius: 0;
-    }
-    
-    .section-title {
-      text-align: center;
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #595d64;
-      font-weight: 400;
-    }
-    
-    .field {
-      margin-bottom: 20px;
-    }
-    
-    .field label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 16px;
-      color: #595d64;
-      font-weight: 400;
-    }
-    
-    .field.required label:after {
-      content: " *";
-      color: #ff3c3c;
-    }
-    
-    .field input[type="text"],
-    .field input[type="email"],
-    .field input[type="tel"],
-    .field textarea,
-    .field select {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #455560;
-      background-color: #ffffff;
-      color: #595d64;
-      font-size: 14px;
-      border-radius: 0;
-    }
-    
-    .field textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      outline: none;
-      border-color: #017cc2;
-    }
-    
-    .radio-group,
-    .checkbox-group {
-      margin-bottom: 15px;
-    }
-    
-    .radio-option,
-    .checkbox-option {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    
-    .radio-option input,
-    .checkbox-option input {
-      margin-right: 8px;
-    }
-    
-    .richtext {
-      margin-bottom: 20px;
-    }
-    
-    .richtext img {
-      max-width: 300px;
-      display: block;
-      margin: 0 auto 20px;
-    }
-    
-    .instructions {
-      margin-bottom: 20px;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border-left: 4px solid #595d64;
-    }
-    
-    .signature-field {
-      position: relative;
-      border: 1px dashed #455560;
-      height: 120px;
-      margin-bottom: 20px;
-      background-color: #f9f9f9;
-    }
-    
-    .signature-label {
-      position: absolute;
-      bottom: 5px;
-      left: 10px;
-      font-size: 12px;
-      color: #6e7580;
-      pointer-events: none;
-      user-select: none;
-      z-index: 1;
-    }
-    
-    #pad {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      cursor: crosshair;
-      z-index: 2;
-    }
-    
-    .submit-btn {
-      background-color: #1c2f3a;
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 0;
-    }
-    
-    .submit-btn:hover {
-      background-color: #14252e;
-    }
-    
-    .supporting-text {
-      font-size: 12px;
-      color: #6e7580;
-      margin-top: 5px;
-    }
-    
-    .signature-controls {
-      margin-top: 5px;
-      font-size: 12px;
-    }
-    
-    .signature-controls button {
-      padding: 5px 10px;
-      margin-right: 5px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    
-    pre {
-      font-family: inherit;
-      white-space: pre-wrap;
-    }
-  </style>
-</head>
-<body class="fsBody body-hosted-form">
-  <div class="form-container">
-    <form action="https://formsubmit.co/stevengwelsh@gmail.com" method="POST" id="applicationForm">
-      <!-- Logo and Title -->
-      <div class="section">
-        <div class="richtext">
-          <img src="https://s3.amazonaws.com/files.formstack.com/public/133466/image_MFMAMembership_Application_2015.jpg" alt="MFMA Logo" style="width: 300px; display: block; margin: 0 auto;">
-        </div>
-        <h2 class="section-title">METROPOLITAN FIRE MARSHALS ASSOCIATION MEMBERSHIP APPLICATION</h2>
-        
-        <div class="instructions">
-          <p>Instruction: After completing the application you must press the submit button at the end of the form to complete the process. You will receive an email confimation of your application. Please include a copy of your confirmation with your payment if paying by check.</p>
-        </div>
-      </div>
-      
-      <!-- Form Fields -->
-      <div class="section">
-        <div class="field required">
-          <label>Membership Type</label>
-          <div class="checkbox-group">
-            <div class="checkbox-option">
-              <input type="checkbox" name="membership_type" value="New Member Regular/Associate   $25.00" id="new_member">
-              <label for="new_member">New Member Regular/Associate   $25.00</label>
-            </div>
-            <div class="checkbox-option">
-              <input type="checkbox" name="membership_type" value="Membership Renewal Regular/Associate   $25.00" id="renewal">
-              <label for="renewal">Membership Renewal Regular/Associate   $25.00</label>
-            </div>
-            <div class="checkbox-option">
-              <input type="checkbox" name="membership_type" value="Membership Update Retired/Honorary" id="retired">
-              <label for="retired">Membership Update Retired/Honorary</label>
-            </div>
-          </div>
-        </div>
-        
-        <div class="field">
-          <label for="agency_name">Agency or Organization Name (This will be publicly visible under Current Members)</label>
-          <input type="text" id="agency_name" name="agency_name">
-        </div>
-        
-        <div class="field required">
-          <label for="member_name">Member Name (This will be publicly visible under Current Members)</label>
-          <input type="text" id="member_name" name="member_name" required>
-        </div>
-        
-        <div class="field">
-          <label for="title">Title (This will be publicly visible under Current Members)</label>
-          <input type="text" id="title" name="title">
-        </div>
-        
-        <div class="field">
-          <label for="agency_address">Agency Address (This will be publicly visible under Current Members)</label>
-          <input type="text" id="agency_address" name="agency_address">
-        </div>
-        
-        <div class="field">
-          <label for="home_address">Home Address (Optional)</label>
-          <input type="text" id="home_address" name="home_address">
-        </div>
-        
-        <div class="field">
-          <label for="published_phone">Published Phone (This will be publicly visible under Current Members)</label>
-          <input type="tel" id="published_phone" name="published_phone">
-        </div>
-        
-        <div class="field">
-          <label for="office_phone">Office Phone</label>
-          <input type="tel" id="office_phone" name="office_phone">
-        </div>
-        
-        <div class="field required">
-          <label for="mobile_phone">Mobile Phone</label>
-          <input type="tel" id="mobile_phone" name="mobile_phone" required>
-        </div>
-        
-        <div class="field">
-          <label for="published_email">Published Email (This will be publicly visible under Current Members)</label>
-          <input type="email" id="published_email" name="published_email">
-        </div>
-        
-        <div class="field required">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        
-        <div class="field required">
-          <label>ICC Member?</label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" name="icc_member" value="Yes" id="icc_yes" required>
-              <label for="icc_yes">Yes</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" name="icc_member" value="No" id="icc_no">
-              <label for="icc_no">No</label>
-            </div>
-          </div>
-        </div>
-        
-        <div class="field" id="icc_number_field" style="display:none;">
-          <label for="icc_number">ICC Member Number</label>
-          <input type="text" id="icc_number" name="icc_number">
-        </div>
-        
-        <div class="field" id="sponsor1_field" style="display:none;">
-          <label for="sponsor1_name">Sponsor 1 Name</label>
-          <input type="text" id="sponsor1_name" name="sponsor1_name">
-        </div>
-        
-        <div class="field" id="sponsor2_field" style="display:none;">
-          <label for="sponsor2_name">Sponsor 2 Name</label>
-          <input type="text" id="sponsor2_name" name="sponsor2_name">
-        </div>
-        
-        <div class="field" id="why_join_field" style="display:none;">
-          <label for="why_join">Explain why you would like to join the MFMA:</label>
-          <textarea id="why_join" name="why_join"></textarea>
-          <div class="supporting-text">Any statement on this application that is determined to be untrue or misleading is grounds for rejection of new members or termination of existing members.</div>
-        </div>
-        
-        <div class="field required">
-          <label>Signature</label>
-          <div class="signature-field">
-            <canvas id="pad"></canvas>
-            <div class="signature-label">Use your mouse or finger to draw your signature above</div>
-          </div>
-          <div class="signature-controls">
-            <button type="button" id="clearSignature">Clear Signature</button>
-          </div>
-          <input type="hidden" id="signature" name="signature" value="">
-          <input type="hidden" id="signatureStatus" name="signature_status" value="not_provided">
-        </div>
-        
-        <div class="field">
-          <label for="check_number">Check # (If paying by credit card, type Credit in this field)</label>
-          <input type="text" id="check_number" name="check_number">
-        </div>
-        
-        <div class="field">
-          <label for="comments">Comments</label>
-          <textarea id="comments" name="comments"></textarea>
-        </div>
-        
-        <div class="richtext">
-          <pre><strong>MAKE CHECKS PAYABLE TO</strong>: Metropolitan Fire Marshals Association
-Mail Check to:
-Fire Marshal Steven Welsh
-c/o Hazelwood Fire Department
-6800 Howdershell Rd. Hazelwood MO 63042
-
-For Credit Card Payments, there will be a 3% processing fee
-
-Contact: Betty Stoecklin
-St. Louis County Fire Academy
-314-889-8670</pre>
-        </div>
-        
-        <div class="field">
-          <button type="submit" class="submit-btn">Submit Form</button>
-        </div>
-      </div>
-      
-      <!-- Formsubmit required fields -->
-      <input type="hidden" name="_subject" value="MFMA Application Submission">
-      <input type="hidden" name="_template" value="table">
-    </form>
-  </div>
-
-  <script>
-    // Add conditional logic for ICC member
-    document.querySelectorAll('input[name="icc_member"]').forEach(radio => {
-      radio.addEventListener('change', function() {
-        const iccNumberField = document.getElementById('icc_number_field');
-        if (this.value === 'Yes') {
-          iccNumberField.style.display = 'block';
-        } else {
-          iccNumberField.style.display = 'none';
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Risk Reduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      });
-    });
-    
-    // Add conditional logic for new member selection
-    document.querySelectorAll('input[name="membership_type"]').forEach(checkbox => {
-      checkbox.addEventListener('change', function() {
-        const showSponsors = document.getElementById('new_member').checked;
-        document.getElementById('sponsor1_field').style.display = showSponsors ? 'block' : 'none';
-        document.getElementById('sponsor2_field').style.display = showSponsors ? 'block' : 'none';
-        document.getElementById('why_join_field').style.display = showSponsors ? 'block' : 'none';
-      });
-    });
-    
-    // Signature pad functionality
-    const signatureField = document.querySelector('.signature-field');
-    const canvas = document.getElementById('pad');
-    const ctx = canvas.getContext('2d');
-    const signatureInput = document.getElementById('signature');
-    const signatureStatusInput = document.getElementById('signatureStatus');
-    
-    let isDrawing = false;
-    let lastX = 0;
-    let lastY = 0;
-    let isEmpty = true;
-    
-    // Set canvas size to match container
-    function resizeCanvas() {
-      const rect = signatureField.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height - 20; // Account for label
-      
-      // Set drawing styles
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-    }
-    
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    
-    function startDrawing(e) {
-      isDrawing = true;
-      const rect = canvas.getBoundingClientRect();
-      lastX = e.clientX - rect.left;
-      lastY = e.clientY - rect.top;
-      
-      // Mark signature as no longer empty
-      if (isEmpty) {
-        isEmpty = false;
-        signatureStatusInput.value = 'provided';
-      }
-    }
-    
-    function draw(e) {
-      if (!isDrawing) return;
-      
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      
-      lastX = x;
-      lastY = y;
-    }
-    
-    function stopDrawing() {
-      if (isDrawing) {
-        isDrawing = false;
-        saveSignature();
-      }
-    }
-    
-    // Mouse events
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
-    
-    // Touch events for mobile
-    canvas.addEventListener('touchstart', function(e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent('mousedown', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    });
-    
-    canvas.addEventListener('touchmove', function(e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent('mousemove', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    });
-    
-    canvas.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      const mouseEvent = new MouseEvent('mouseup', {});
-      canvas.dispatchEvent(mouseEvent);
-    });
-    
-    function saveSignature() {
-      // Save canvas as data URL with a reasonable size limit
-      const dataURL = canvas.toDataURL('image/png', 0.7);
-      signatureInput.value = dataURL;
-    }
-    
-    // Clear signature functionality
-    document.getElementById('clearSignature').addEventListener('click', function() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      signatureInput.value = '';
-      signatureStatusInput.value = 'not_provided';
-      isEmpty = true;
-    });
-    
-    // Form submission validation
-    document.getElementById('applicationForm').addEventListener('submit', function(e) {
-      // Check if signature is provided
-      if (isEmpty) {
-        e.preventDefault();
-        alert('Please provide your signature before submitting the form.');
-        return false;
-      }
-    });
-  </script>
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .emblem {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: float 6s ease-in-out infinite;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            background-color: white;
+        }
+        
+        .title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff9a56, #ff6a88, #d57eeb);
+            border-radius: 10px;
+        }
+        
+        .subheadings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .subheading {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .subheading:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subheading a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: 500;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .subheading:hover a {
+            color: white;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .subheadings { grid-template-columns: 1fr; }
+        }
+        
+        .loading-message {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Hazelwood Fire Department<br>Fire Marshal Dashboard</h1>
+        
+        <!-- Loading message will be shown while buttons are being loaded -->
+        <div class="loading-message" id="loadingMessage">Loading dashboard...</div>
+        
+        <!-- Buttons will be dynamically added here -->
+        <div class="subheadings" id="buttonContainer">
+            <!-- Buttons will be inserted here by JavaScript -->
+        </div>
+        
+        <img class="emblem" src="https://github.com/sgwelsh/Media/blob/main/VeniceAI_Os8SsvW.png?raw=true" alt="Community Risk Reduction Emblem">
+    </div>
+
+    <script>
+        // Wait for page to load
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttonContainer = document.getElementById('buttonContainer');
+            const loadingMessage = document.getElementById('loadingMessage');
+            
+            // Function to parse CSV line, handling quoted fields with commas
+            function parseCSVLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    const nextChar = line[i+1];
+                    
+                    if (char === '"' && inQuotes && nextChar === '"') {
+                        // Escaped quote within quoted field
+                        current += '"';
+                        i++; // Skip the next quote
+                    } else if (char === '"') {
+                        // Start or end of quoted field
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        // Field separator
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        // Regular character
+                        current += char;
+                    }
+                }
+                
+                // Add the last field
+                result.push(current.trim());
+                return result;
+            }
+            
+            // Function to load buttons from CSV
+            function loadButtonsFromCSV() {
+                // Try to load from local CSV first
+                fetch('buttons.csv')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Local CSV not found');
+                        return response.text();
+                    })
+                    .then(csvData => {
+                        processCSVAndCreateButtons(csvData);
+                        loadingMessage.style.display = 'none';
+                    })
+                    .catch(error => {
+                        // If local fails, try GitHub
+                        fetch('https://raw.githubusercontent.com/sgwelsh/hazelwood-fire-dashboard/main/buttons.csv')
+                            .then(response => {
+                                if (!response.ok) throw new Error('GitHub CSV not found');
+                                return response.text();
+                            })
+                            .then(csvData => {
+                                processCSVAndCreateButtons(csvData);
+                                loadingMessage.style.display = 'none';
+                            })
+                            .catch(error => {
+                                loadingMessage.textContent = 'Error loading dashboard data. Please check your CSV file.';
+                            });
+                    });
+            }
+            
+            // Function to process CSV and create buttons
+            function processCSVAndCreateButtons(csvData) {
+                // Parse CSV - each line has format: ButtonName,Hyperlink
+                const lines = csvData.split('\n');
+                
+                // Process ALL rows including the first one
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue; // Skip empty lines
+                    
+                    // Use the parseCSVLine function to handle commas in URLs
+                    const parts = parseCSVLine(line);
+                    
+                    if (parts.length < 2) continue; // Skip malformed lines
+                    
+                    const buttonName = parts[0];
+                    const buttonLink = parts[1];
+                    
+                    // Check if it's a CSV page link (ends with .html) or external link
+                    const isCSVLink = buttonLink.endsWith('.html');
+                    
+                    // Create button element
+                    const buttonDiv = document.createElement('div');
+                    buttonDiv.className = 'subheading';
+                    
+                    const buttonLinkElement = document.createElement('a');
+                    buttonLinkElement.textContent = buttonName;
+                    buttonLinkElement.href = buttonLink;
+                    
+                    if (isCSVLink) {
+                        // This is a page link, not an external resource
+                        buttonLinkElement.target = '_self';
+                    } else {
+                        // This is an external resource
+                        buttonLinkElement.target = '_blank';
+                    }
+                    
+                    buttonDiv.appendChild(buttonLinkElement);
+                    buttonContainer.appendChild(buttonDiv);
+                }
+            }
+            
+            // Start the process
+            loadButtonsFromCSV();
+        });
+    </script>
 </body>
 </html>
