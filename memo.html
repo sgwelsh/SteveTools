@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interoffice Memorandum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 60px;
+            background-color: white;
+        }
+        
+        .memo-header {
+            text-align: center;
+            margin-bottom: 30px;
+            margin-left: -50px;
+            margin-top: -55px;
+        }
+        
+        .memo-header img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .memo-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+            margin-right: 60px;
+        }
+        
+        .field-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .field-row label {
+            width: 100px;
+            font-weight: bold;
+        }
+        
+        .field-row input {
+            flex: 1;
+            padding: 5px;
+        }
+        
+        hr {
+            margin: 0px 00px;
+            border-top: 2px solid black;
+        }
+        
+        .body-field {
+            margin-bottom: 20px;
+            margin-left: 30px;
+            margin-right: 100px;
+            margin-top: 30px;
+        }
+        
+        .body-field textarea {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            resize: vertical;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin: 0 60px;
+        }
+        
+        .print-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .print-btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        @media print {
+            body > *:not(.preview-container) {
+                display: none !important;
+            }
+            
+            .preview-container {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                border: none !important;
+            }
+        }
+    
+        .preview-container .body-field {
+            margin-left: 30px !important;
+            margin-right: 30px !important;
+            margin-top: 20px !important;
+            margin-bottom: 15px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="memo-header">
+        <img src="memo.png" alt="Interoffice Memorandum" />
+    </div>
+    
+    <div class="memo-fields">
+        <div class="field-row">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date">
+        </div>
+        
+        <div class="field-row">
+            <label for="from">From:</label>
+            <input type="text" id="from" name="from">
+        </div>
+        
+        <div class="field-row">
+            <label for="to">To:</label>
+            <input type="text" id="to" name="to">
+        </div>
+        
+        <div class="field-row">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject">
+        </div>
+    </div>
+    
+    <hr>
+    
+    <div class="body-field">
+        <label for="body">Body:</label>
+        <textarea id="body" name="body"></textarea>
+    </div>
+    
+    <div class="button-container">
+        <button class="print-btn" onclick="printMemo()">Print</button>
+    </div>
+    
+    <div id="preview-container" class="preview-container" style="display: none;">
+        <div class="memo-header">
+            <img src="memo.png" alt="Interoffice Memorandum" />
+        </div>
+        
+        <div class="memo-fields">
+            <div class="field-row">
+                <label>Date:</label>
+                <span id="preview-date"></span>
+            </div>
+            
+            <div class="field-row">
+                <label>From:</label>
+                <span id="preview-from"></span>
+            </div>
+            
+            <div class="field-row">
+                <label>To:</label>
+                <span id="preview-to"></span>
+            </div>
+            
+            <div class="field-row">
+                <label>Subject:</label>
+                <span id="preview-subject"></span>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div class="body-field">
+            <div id="preview-body"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Function to format date with month name
+        function formatDateWithMonth(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            const month = months[date.getMonth()];
+            const day = date.getDate();
+            const year = date.getFullYear();
+            
+            return `${month} ${day}, ${year}`;
+        }
+        
+        // Set default date to current date
+        const now = new Date();
+        document.getElementById('date').valueAsDate = now;
+        
+        function printMemo() {
+            // Update preview content with formatted date
+            document.getElementById('preview-date').textContent = formatDateWithMonth(document.getElementById('date').value);
+            document.getElementById('preview-from').textContent = document.getElementById('from').value;
+            document.getElementById('preview-to').textContent = document.getElementById('to').value;
+            document.getElementById('preview-subject').textContent = document.getElementById('subject').value;
+            
+            // Convert newlines to HTML line breaks
+            const bodyContent = document.getElementById('body').value.replace(/\n/g, '<br>');
+            document.getElementById('preview-body').innerHTML = bodyContent;
+            
+            // Make preview visible for printing
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.style.display = 'block';
+            
+            // Print and then hide the preview after printing
+            setTimeout(() => {
+                window.print();
+                // Hide preview after printing
+                setTimeout(() => {
+                    previewContainer.style.display = 'none';
+                }, 100);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
