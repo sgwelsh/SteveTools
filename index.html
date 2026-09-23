@@ -198,7 +198,7 @@
                     })
                     .catch(error => {
                         // If local fails, try GitHub
-                        fetch('https://raw.githubusercontent.com/sgwelsh/hazelwood-fire-dashboard/main/buttons.csv')
+                        fetch('buttons.csv')
                             .then(response => {
                                 if (!response.ok) throw new Error('GitHub CSV not found');
                                 return response.text();
